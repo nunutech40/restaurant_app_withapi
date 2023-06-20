@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app_withapi/data/model/restaurant_list.dart';
-
-import '../common/styles.dart';
+import 'package:restaurant_app_withapi/ui/restaurant_detail_page.dart';
 
 class CardRestaurant extends StatelessWidget {
   final Restaurant restaurant;
@@ -13,7 +12,16 @@ class CardRestaurant extends StatelessWidget {
         restaurant.pictureId;
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          RestaurantDetailPage.routeName,
+          arguments: {
+            'restaurant': restaurant,
+            'id': restaurant.id,
+          },
+        );
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(

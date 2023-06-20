@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app_withapi/provider/restauran_detail_provider.dart';
 import 'package:restaurant_app_withapi/ui/home_page.dart';
+import 'package:restaurant_app_withapi/ui/restaurant_detail_page.dart';
 
-import 'common/styles.dart';
+import 'package:restaurant_app_withapi/data/api/api_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,37 +13,31 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'News App',
       theme: ThemeData(
-        colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: primaryColor,
-              onPrimary: Colors.black,
-              secondary: secondaryColor,
-            ),
-        scaffoldBackgroundColor: Colors.white,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        textTheme: myTextTheme,
-        appBarTheme: const AppBarTheme(elevation: 0),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: secondaryColor,
-            foregroundColor: Colors.white,
-            textStyle: const TextStyle(),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(0),
-              ),
-            ),
+          // Your theme data
           ),
-        ),
-      ),
       initialRoute: HomePage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
+        RestaurantDetailPage.routeName: (context) {
+          final arguments = ModalRoute.of(context)?.settings.arguments;
+          if (arguments is Map<String, dynamic>) {
+            final id = arguments['id'] as String;
+            return ChangeNotifierProvider<RestaurantDetailProvider>(
+              create: (context) => RestaurantDetailProvider(
+                apiService:
+                    ApiService(), // Provide your API service instance here
+                id: id,
+              ),
+              child: RestaurantDetailPage(id: id),
+            );
+          }
+          throw Exception('Invalid arguments provided');
+        },
       },
     );
   }

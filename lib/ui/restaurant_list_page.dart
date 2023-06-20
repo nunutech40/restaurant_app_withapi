@@ -17,13 +17,9 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('News App'),
-      ),
       body: CustomScrollView(
         slivers: [
           _buildHeader(),
-          _buildSearchBar(),
           _buildRestaurantList(),
         ],
       ),
@@ -65,33 +61,6 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return SliverPadding(
-      padding: EdgeInsets.all(16.0),
-      sliver: SliverAppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        floating: true,
-        pinned: true,
-        flexibleSpace: TextField(
-          controller: searchController,
-          decoration: InputDecoration(
-            hintText: 'Search for a restaurant',
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-          ),
-          onChanged: (value) {
-            setState(() {}); // Update the filtered list on search query change
-          },
         ),
       ),
     );

@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_app_withapi/ui/restaurant_search_page.dart';
+import 'package:restaurant_app_withapi/provider/restaurant_search_provider.dart';
 import 'package:restaurant_app_withapi/widgets/card_restaurant.dart';
 
-import '../provider/restaurant_list_provider.dart';
-
-class RestaurantListPage extends StatefulWidget {
-  const RestaurantListPage({Key? key}) : super(key: key);
+class RestaurantListSearchPage extends StatefulWidget {
+  const RestaurantListSearchPage({Key? key}) : super(key: key);
 
   @override
-  _RestaurantListPageState createState() => _RestaurantListPageState();
+  _RestaurantListSearchPageState createState() =>
+      _RestaurantListSearchPageState();
 }
 
-class _RestaurantListPageState extends State<RestaurantListPage> {
+class _RestaurantListSearchPageState extends State<RestaurantListSearchPage> {
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +26,35 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
       body: CustomScrollView(
         slivers: [
           _buildHeader(),
+          _buildSearchField(),
           _buildRestaurantList(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchField() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: TextField(
+          controller: searchController,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            hintText: 'Search...',
+            hintStyle: TextStyle(color: Colors.grey),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+          ),
+          onChanged: (value) {
+            // Perform search action
+            Provider.of<RestaurantSearchProvider>(context, listen: false)
+                .searchRestaurant(value);
+          },
+        ),
       ),
     );
   }
@@ -44,7 +77,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                     child: Align(
                       alignment: AlignmentDirectional.centerStart,
                       child: Text(
-                        'Restaurant',
+                        'Search',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28.0,
@@ -52,23 +85,12 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(
-                          context, RestaurantSearchPage.routeName);
-                    },
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 28.0,
-                    ),
-                  ),
                 ],
               ),
               Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
-                  'Recommendation restaurant for you!',
+                  'Search Recommendation restaurant for you!',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14.0,
@@ -84,7 +106,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
   }
 
   Widget _buildRestaurantList() {
-    return Consumer<RestaurantProvider>(
+    return Consumer<RestaurantSearchProvider>(
       builder: (context, state, _) {
         if (state.state == ResultState.loading) {
           return SliverFillRemaining(

@@ -5,6 +5,7 @@ import 'package:restaurant_app_withapi/ui/home_page.dart';
 import 'package:restaurant_app_withapi/ui/restaurant_detail_page.dart';
 
 import 'package:restaurant_app_withapi/data/api/api_service.dart';
+import 'package:restaurant_app_withapi/ui/restaurant_search_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
           }
           throw Exception('Invalid arguments provided');
         },
+        RestaurantSearchPage.routeName: (context) =>
+            const RestaurantSearchPage()
       },
     );
   }

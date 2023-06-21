@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:restaurant_app_withapi/data/api/api_service.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,16 @@ class RestaurantSearchProvider extends ChangeNotifier {
       _state = ResultState.loading;
       notifyListeners();
 
+      final isConnected = await InternetConnectionChecker().hasConnection;
+
+      if (!isConnected) {
+        _state = ResultState.error;
+        _message =
+            'No internet connection. Please check your internet connection and try again.';
+        notifyListeners();
+        return;
+      }
+
       final restauranSearchtList = await apiService.restaurantSearch(text);
       _searchRestaurantResult = restauranSearchtList;
 
@@ -41,7 +52,7 @@ class RestaurantSearchProvider extends ChangeNotifier {
       }
     } catch (e) {
       _state = ResultState.error;
-      _message = 'Error --> $e';
+      _message = 'An error occurred while fetching restaurant data: $e';
     } finally {
       notifyListeners();
     }

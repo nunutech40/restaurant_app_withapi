@@ -35,7 +35,6 @@ class ApiService {
   Future<SearchResponse> restaurantSearch(String text) async {
     final response =
         await http.get(Uri.parse(_baseUrl + _restaurantSearchEndPoint + text));
-    print("cek dataaaaa: ${response.body}");
     if (response.statusCode == 200) {
       return SearchResponse.fromJson(json.decode(response.body));
     } else {

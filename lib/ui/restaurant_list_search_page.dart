@@ -134,7 +134,10 @@ class _RestaurantListSearchPageState extends State<RestaurantListSearchPage> {
           return SliverFillRemaining(
             child: Center(
               child: Material(
-                child: Text(state.message),
+                child: Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           );

@@ -12,18 +12,26 @@ class RestaurantDetailProvider extends ChangeNotifier {
   final String id;
 
   RestaurantDetailProvider({required this.apiService, required this.id}) {
+    _restaurantDetailResult = RestaurantDetailResponse(
+      error: true,
+      message: '',
+      restaurant: null,
+    );
     _fetchRestaurantDetailAll(id);
   }
 
   late RestaurantDetailResponse _restaurantDetailResult;
   ResultState _state = ResultState.loading;
   String _message = '';
+  dynamic _error;
 
   String get message => _message;
 
   RestaurantDetailResponse get result => _restaurantDetailResult;
 
   ResultState get state => _state;
+
+  dynamic get error => _error;
 
   Future<void> _fetchRestaurantDetailAll(String id) async {
     try {
@@ -39,6 +47,7 @@ class RestaurantDetailProvider extends ChangeNotifier {
     } catch (e) {
       _state = ResultState.error;
       _message = 'Error --> $e';
+      _error = e;
     } finally {
       notifyListeners();
     }

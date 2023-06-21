@@ -13,7 +13,6 @@ class RestaurantListPage extends StatefulWidget {
 }
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +111,10 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
           return SliverFillRemaining(
             child: Center(
               child: Material(
-                child: Text(state.message),
+                child: Text(
+                  state.message,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           );

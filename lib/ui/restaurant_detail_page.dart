@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app_withapi/widgets/card_restaurant_detail.dart';
 
-import '../data/model/restaurant_detail.dart';
 import '../provider/restauran_detail_provider.dart';
 
 class RestaurantDetailPage extends StatelessWidget {
@@ -22,24 +21,25 @@ class RestaurantDetailPage extends StatelessWidget {
       ),
       body: Consumer<RestaurantDetailProvider>(
         builder: (context, restaurantDetailProvider, _) {
-          return FutureBuilder<RestaurantDetailResponse>(
-            future: restaurantDetailProvider.apiService.restaurantDetail(id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else if (!snapshot.hasData ||
-                  snapshot.data!.restaurant == null) {
-                return const Center(child: Text('No data available'));
-              } else {
-                final restaurantDetail = snapshot.data!.restaurant!;
-                return CardRestaurantDetail(restaurantDetail: restaurantDetail);
-              }
-            },
-          );
+          final restaurantDetail = restaurantDetailProvider.result?.restaurant;
+          final error = restaurantDetailProvider.error;
+
+          if (restaurantDetailProvider.state == ResultState.loading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (error != null) {
+            return Center(
+              child: Text('Error: $error'),
+            );
+          } else if (restaurantDetail == null) {
+            return const Center(
+              child: Text(
+                'No data available',
+                textAlign: TextAlign.center,
+              ),
+            );
+          } else {
+            return CardRestaurantDetail(restaurantDetail: restaurantDetail);
+          }
         },
       ),
     );
